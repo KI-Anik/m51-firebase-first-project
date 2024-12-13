@@ -9,30 +9,33 @@ import Home from './components/Home';
 import Root from './components/Root';
 import Login from './components/Login';
 import Register from './components/Register';
+import AuthProvider from './Provider/AuthProvider';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root></Root>,
-    children:[
-     {
-      path: '/',
-      element: <Home></Home>
-     },
-     {
-      path: 'login',
-      element: <Login></Login>
-     },
-     {
-      path: 'register',
-      element: <Register></Register>
-     }
+    children: [
+      {
+        path: '/',
+        element: <Home></Home>
+      },
+      {
+        path: 'login',
+        element: <Login></Login>
+      },
+      {
+        path: 'register',
+        element: <Register></Register>
+      }
     ]
   },
 ]);
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 )
