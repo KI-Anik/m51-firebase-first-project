@@ -1,16 +1,19 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 
 const Login = () => {
+  const navigate = useNavigate()
 
-  const {signInUser} = useContext(AuthContext)
+  const {signInUser, signInGoogle} = useContext(AuthContext)
 
     const handleLogin=(e)=>{
         e.preventDefault()
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(email, password)
+        e.target.reset(); // clean the input
+        navigate('/');
 
         signInUser(email,password)
         .then(result => {
@@ -20,6 +23,18 @@ const Login = () => {
           console.log('ERROR', error)
         })
     }
+
+    const handleGoogle = ()=> {
+      signInGoogle()
+      .then(result => {
+        console.log(result.user)
+        navigate('/')
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
+    }
+
   return (
     <div className="hero bg-base-200 min-h-screen">
   <div className="hero-content flex-col lg:flex-row-reverse">
@@ -48,6 +63,7 @@ const Login = () => {
         </div>
       <p>new here? please <Link to={'/register'} className='text-blue-500'>Register</Link> first</p>
       </form>
+      <a onClick={handleGoogle} className='btn'>Google</a>
     </div>
   </div>
 </div>
