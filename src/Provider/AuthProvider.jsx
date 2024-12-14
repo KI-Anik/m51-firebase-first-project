@@ -7,27 +7,31 @@ export const AuthContext = createContext(null)
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     const createUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     const signInUser = (email, password) => {
+        setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
 
     const signOutUser = () => {
+        setLoading(true)
         return signOut(auth)
     }
 
-        // observer, checking am i sign in or not
+    // observer, checking am i sign in or not
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-            console.log('current user', currentUser)
-            setUser(currentUser)
-        })
-        return() => {
-            unSubscribe()
+            setUser(currentUser); // Set user if found
+            setLoading(false);    // Loading is complete
+        });
+
+        return () => {
+            unSubscribe(); // Clean up on component unmount
         }
     }, [])
 
@@ -42,11 +46,10 @@ const AuthProvider = ({ children }) => {
     //     }
     // })
 
-    const name = 'hey vai'
-    //sort hand object
+    //sort hand object destructure
     const authInfo = {
-        name,
         user,
+        loading,
         createUser,
         signInUser,
         signOutUser
